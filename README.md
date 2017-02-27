@@ -12,7 +12,7 @@ for a scaled version of your original graphics.
 	import view
 	from view import T
 	
-	# Target resolution: 640x480. Actual height: 720
+	# Baseline resolution: 640x480. Actual height: 720
 	view.set_mode((640, 480), 720)
 	
 	# draw a circle in the lower right
@@ -33,24 +33,27 @@ Download `view.py` and put it in your source directory. To install from command 
 
 	view.set_mode(size0 = None, height = None, fullscreen = None, forceres = None)
 
-Call this function once to set at least the baseline resolution (`size0`). You can update any of
-the options by calling it again with keyword arguments. Each call to this function resizes the
-actual window.
+Call this function once to set at least the baseline resolution (`size0`). You can subsequently
+update any of the options by calling it again with keyword arguments. Each call to this function
+results in a call to `pygame.display.set_mode` with the updated options.
 
-Normally, the `height` option is only used in window mode. If `fullscreen` is set to `True` then the
-`height` option is ignored. However, if `forceres` is set to `True`, then the resolution will be
-chosen to match `height`, just like in window mode. Otherwise fullscreen mode will have the largest
-possible resolution that matches the aspect ratio of `size0`.
+Normally, the `height` option is only considered in window (non-fullscreen) mode. If `fullscreen` is
+set to `True` then the `height` option is ignored. However, if `forceres` is set to `True`, then the
+resolution will be chosen to match `height`, just like in window mode. Otherwise fullscreen mode
+will have the largest possible resolution that matches the aspect ratio of `size0`.
 
 ### `view.toggle_fullscreen`
+
+	view.toggle_fullscreen()
 
 Calls `view.set_mode` with the appropriate fullscreen option.
 
 ### `view.T`
 
-This function is designed to be a convenient way to scale values from the baseline resolution to the
-actual resolution. For example, if the baseline resolution is 640x480 and the actual resolution is
-1280x960, then this function will scale values up by a factor of 2. For example:
+This function is a convenient way to scale values from the baseline resolution to the actual
+resolution. For example, if the baseline resolution is 640x480 and the actual resolution is
+1280x960, then this function will scale values up by a factor of 2. It can take single values,
+sequences of values, multiple values to be mapped to a sequence, or `Rect`s. For example:
 
 	from view import T
 
@@ -61,7 +64,12 @@ actual resolution. For example, if the baseline resolution is 640x480 and the ac
 	T(1, 2, 3) -> [2, 4, 6]
 	T(pygame.Rect(10, 10, 50, 50)) -> pygame.Rect(20, 20, 100, 100)
 
-The reason it returns ints and rounds away from 0 is because many pygame functions require integer
+You'll usually call `T` on numerical arguments of functions to `pygame.draw` methods. You'll also
+probably call it on the font size when loading a font with `pygame.font.Font`. If you're scaling
+images that will appear on the screen, you'll probably call it on the target image size of
+`pygame.transform.scale`. Probably also the rectangle list in `pygame.display.update`.
+
+The reason `T` returns ints and rounds away from 0 is because many pygame functions require integer
 pixel values, and some require positive values, such as the `width` parameter in
 `pygame.draw.circle`. So this avoids throwing an exception in those cases when the actual resolution
 gets too small.
@@ -73,10 +81,8 @@ These are updated every time you call `view.set_mode`.
 	view.screen: the display surface
 	view.rect: a Rect with the actual dimensions
 	view.rect0: a Rect with the baseline dimensions
-	view.aspect: the aspect ratio (width / height)
-	view.f: ratio of actual dimensions to baseline dimensions
-
-This is set to the display surface every time you call `view.set_mode`.
+	view.aspect: the aspect ratio (width0 / height0)
+	view.f: ratio of actual dimensions to baseline dimensions (height / height0)
 
 ### `view` rect attributes
 
