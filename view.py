@@ -64,10 +64,10 @@ def T(x, *args):
 	try:
 		return [T(a) for a in x]
 	except TypeError:
-		return int((math.ceil if x > 0 else math.floor)(x * h / h0))
+		return int((math.ceil if x > 0 else math.floor)(x * f))
 
 def _setattrs():
-	global screen, rect, rect0
+	global screen, rect, rect0, aspect, f
 	rect0 = pygame.Rect((0, 0, size0[0], size0[1]))
 	screen = pygame.display.get_surface()
 	rect = screen.get_rect()
@@ -78,4 +78,7 @@ def _setattrs():
 	for attr in rectattrs:
 		globals()[attr] = getattr(rect, attr)
 		globals()[attr + "0"] = getattr(rect0, attr)
+	aspect = w0 / h0
+	f = h / h0
+
 

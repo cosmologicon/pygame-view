@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*~
+*.blend1
+shattered/map/data/*
+shattered/models/frames/*
+shattered/vidcap-*/
