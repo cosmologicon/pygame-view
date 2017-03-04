@@ -86,8 +86,8 @@ These are updated every time you call `pview.set_mode`.
 
 ### `pview` rect attributes
 
-The pview module also has attributes that mirror the attributes of `pygame.Rect`. The same attributes
-with a suffix of `0` refer to the baseline resolution.
+The pview module also has attributes that mirror the attributes of `pygame.Rect`. The same
+attributes with a suffix of `0` refer to the baseline resolution.
 
 For example, if the actual resolution is 600x400, then it will have the following values:
 
@@ -103,7 +103,38 @@ and if the baseline resolution is 300x200, then it will have the following value
 	pview.bottomright0 = 300, 200
 
 Unlike with `pygame.Rect`, these attributes are *not* magical, and setting them will not have any
-effect on the behavior of the `pview` module.
+effect on the behavior of the `pview` module. The complete set of attributes are (along with their
+corresponding `0` versions):
+
+	x y top left bottom right
+	topleft bottomleft topright bottomright
+	midtop midleft midbottom midright
+	center centerx centery size width height w h
+	diag area s
+
+The attributes `diag`, `area`, and `s` are not used by `pygame.Rect`. They are defined as:
+
+	diag = sqrt(w ** 2 + h ** 2)
+	area = w * h
+	s = sqrt(area)
+
+where `diag` and `s` are rounded to the nearest integer.
+
+### `pview.fill`
+
+	pview.fill(color, rect = None)
+
+Similar to calling `pview.screen.fill(color, rect)`, except that alpha values of the color are
+respected. If the color has an alpha value less than 255, transparency blending will be used.
+
+### `pview.screenshot`
+
+	pview.screenshot()
+
+Takes a screenshot of the current screen and saves it to a timestamped file. The location can be
+specified by setting `pview.SCREENSHOT_DIRECTORY`, which defaults to `"."`. The filename template
+(which is passed to `strftime`) can be specified by setting `pview.SCREENSHOT_TEMPLATE`, which
+defaults to `"screenshot-%Y%m%d%H%M%S.png"`.
 
 ### flags
 

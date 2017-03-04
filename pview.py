@@ -2,10 +2,12 @@
 # https://github.com/cosmologicon/pygame-view
 
 from __future__ import division
-import pygame, math
+import pygame, math, os.path, datetime
 
 WINDOW_FLAGS = 0
 FULLSCREEN_FLAGS = pygame.HWSURFACE | pygame.DOUBLEBUF
+SCREENSHOT_DIRECTORY = "."
+SCREENSHOT_TEMPLATE = "screenshot-%Y%m%d%H%M%S.png"
 
 size0 = None
 _height = None
@@ -17,7 +19,7 @@ def set_mode(size0 = None, height = _EMPTY_SENTINEL, fullscreen = None, forceres
 	if size0 is not None:
 		_set_size0(size0)
 	if height is not _EMPTY_SENTINEL:
-		_height = height
+		_height = int(round(height))
 	if fullscreen is not None:
 		_fullscreen = fullscreen
 	if forceres is not None:
@@ -67,7 +69,7 @@ def T(x, *args):
 		return int((math.ceil if x > 0 else math.floor)(x * f))
 
 def _setattrs():
-	global screen, rect, rect0, aspect, f
+	global screen, rect, rect0, aspect, diag, diag0, area, area0, s, s0, f
 	rect0 = pygame.Rect((0, 0, size0[0], size0[1]))
 	screen = pygame.display.get_surface()
 	rect = screen.get_rect()
@@ -78,7 +80,37 @@ def _setattrs():
 	for attr in rectattrs:
 		globals()[attr] = getattr(rect, attr)
 		globals()[attr + "0"] = getattr(rect0, attr)
+	diag = int(round(math.sqrt(w ** 2 + h ** 2)))
+	diag0 = int(round(math.sqrt(w0 ** 2 + h0 ** 2)))
+	area = w * h
+	area0 = w0 * h0
+	s = int(round(math.sqrt(area)))
+	s0 = int(round(math.sqrt(area0)))
 	aspect = w0 / h0
 	f = h / h0
 
+def fill(color, rect = None):
+	# Color can be a color name string, a 3- or 4-tuple, or a pygame.Color object.
+	try:
+		color = pygame.Color(color)
+	except ValueError:
+		color = pygame.Color(*[min(max(int(round(a)), 0), 255) for a in color])
+	rect = pygame.Rect(_resolverect(rect))
+	if color.a == 255:
+		screen.fill(color, rect)
+	elif color.a == 0:
+		return
+	else:
+		surf = pygame.Surface(rect.size).convert_alpha()
+		surf.fill(color)
+		screen.blit(surf, rect)
+
+def _resolverect(r):
+	return r or rect
+
+def screenshot():
+	if not os.path.exists(SCREENSHOT_DIRECTORY):
+		os.makedirs(SCREENSHOT_DIRECTORY)
+	fname = datetime.datetime.now().strftime(SCREENSHOT_TEMPLATE)
+	pygame.image.save(screen, os.path.join(SCREENSHOT_DIRECTORY, fname))
 
