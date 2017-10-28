@@ -64,10 +64,13 @@ sequences of values, multiple values to be mapped to a sequence, or `Rect`s. For
 	T(1, 2, 3) -> [2, 4, 6]
 	T(pygame.Rect(10, 10, 50, 50)) -> pygame.Rect(20, 20, 100, 100)
 
-You'll usually call `T` on numerical arguments of functions to `pygame.draw` methods. You'll also
-probably call it on the font size when loading a font with `pygame.font.Font`. If you're scaling
-images that will appear on the screen, you'll probably call it on the target image size of
-`pygame.transform.scale`. Probably also the rectangle list in `pygame.display.update`.
+Typically you will call `T` on:
+
+* numerical arguments of functions to `pygame.draw` methods
+* the font size when loading a font with `pygame.font.Font`
+* the target image size of `pygame.transform.scale`, if you're scaling images that will appear on
+the screen
+* the rectangle list in `pygame.display.update`
 
 The reason `T` returns ints and rounds away from 0 is because many pygame functions require integer
 pixel values, and some require positive values, such as the `width` parameter in
@@ -144,6 +147,14 @@ Takes a screenshot of the current screen and saves it to a timestamped file. The
 specified by setting `pview.SCREENSHOT_DIRECTORY`, which defaults to `"."`. The filename template
 (which is passed to `strftime`) can be specified by setting `pview.SCREENSHOT_TEMPLATE`, which
 defaults to `"screenshot-%Y%m%d%H%M%S.png"`.
+
+### `pview.I`
+
+	from pview import I
+	I(2.2, -2.2) -> [3, -3]
+
+Rounds away from 0 and converts to integer. `pview.I` is similar to `pview.T`, except it does not
+scale to match the actual resolution.
 
 ### flags
 

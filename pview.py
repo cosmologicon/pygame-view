@@ -80,6 +80,16 @@ def T(x, *args):
 	except TypeError:
 		return int((math.ceil if x > 0 else math.floor)(x * f))
 
+def I(x, *args):
+	if args:
+		return [I(a) for a in (x,) + args]
+	if isinstance(x, pygame.Rect):
+		return pygame.Rect([I(a) for a in x])
+	try:
+		return [I(a) for a in x]
+	except TypeError:
+		return int((math.ceil if x > 0 else math.floor)(x))
+
 def _setattrs():
 	global screen, rect, rect0, aspect, diag, diag0, area, area0, s, s0, f
 	rect0 = pygame.Rect((0, 0, size0[0], size0[1]))
