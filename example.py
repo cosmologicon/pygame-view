@@ -34,6 +34,10 @@ while playing:
 				pview.set_mode(height = 400)
 			if event.key == pygame.K_4:
 				pview.set_mode(height = 500)
+			if event.key == pygame.K_5:
+				pview.cycle_height((200, 300, 400, 500))
+			if event.key == pygame.K_6:
+				pview.cycle_height((200, 300, 400, 500), reverse = True)
 			if event.key == pygame.K_f:
 				pview.toggle_fullscreen()
 			if event.key == pygame.K_SPACE:
@@ -71,6 +75,7 @@ while playing:
 		"Baseline resolution: %dx%d" % pview.size0,
 		"Apsect ratio: %.2f" % pview.aspect,
 		"1-4: select resolution",
+		"5/6: cycle resolution",
 		"F: toggle fullscreen",
 		"Space: flop",
 		"Esc: quit",

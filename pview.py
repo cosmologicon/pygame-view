@@ -31,6 +31,18 @@ def _set_size0(r):
 	w, h = r
 	size0 = int(w), int(h)
 
+def cycle_height(heights, reverse = False):
+	heights = list(heights)
+	if _height is None:
+		height = max(heights) if reverse else min(heights)
+	elif reverse:
+		ok_heights = [height for height in heights if height < _height]
+		height = max(ok_heights or heights)
+	else:
+		ok_heights = [height for height in heights if height > _height]
+		height = min(ok_heights or heights)
+	set_mode(height = height)
+
 def toggle_fullscreen():
 	set_mode(fullscreen = not _fullscreen)
 

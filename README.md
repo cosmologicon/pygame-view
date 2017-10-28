@@ -127,6 +127,15 @@ where `diag` and `s` are rounded to the nearest integer.
 Similar to calling `pview.screen.fill(color, rect)`, except that alpha values of the color are
 respected. If the color has an alpha value less than 255, transparency blending will be used.
 
+### `pview.cycle_height`
+
+	pview.cycle_height(heights, reverse = False)
+
+Given a list of heights, choose a height from the list based on the current height. If the current
+height is in the list of heights, then choose the next largest (wrapping around to the smallest if
+the current height is equal to the largest height in the list). If `reverse` is set to `True`, then
+instead choose the next smallest.
+
 ### `pview.screenshot`
 
 	pview.screenshot()
